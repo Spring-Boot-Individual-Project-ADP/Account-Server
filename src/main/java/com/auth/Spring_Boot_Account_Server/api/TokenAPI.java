@@ -40,13 +40,14 @@ public class TokenAPI {
 
     private boolean checkPassword(String username, String password) {
         // special case for application user
-        if(username.equals("ApiClientApp") && password.equals("secret")) {
-            return true;
-        }
+//        if(username.equals("ApiClientApp") && password.equals("secret")) {
+//            return true;
+//        }
         // make call to customer service
         Customer cust = getCustomerByNameFromCustomerAPI(username);
 
         // compare name and password
+
         if(cust != null && cust.getName().equals(username) && cust.getPassword().equals(password)) {
             return true;
         }
@@ -63,10 +64,10 @@ public class TokenAPI {
     }
 
      static Token createToken(String username) {
-        String scopes = "com.data";
+        String scopes = "com.data.apis";
         // special case for application user
 //        if( username.equalsIgnoreCase("ApiClientApp")) {
-//            scopes = "com.webage.auth.apis";
+//            scopes = "com.auth.apis";
 //        }
         String token_string = JWTHelper.createToken(scopes);
 
@@ -85,13 +86,14 @@ public class TokenAPI {
 
     private Customer getCustomerByNameFromCustomerAPI(String username) {
         try {
-
             URL url = new URL("http://localhost:8080/api/customers/byname/" + username);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
             Token token = createToken("");
             conn.setRequestProperty("authorization", "Bearer " + token.getToken());
+
+
 
             if (conn.getResponseCode() != 200) {
                 return null;
