@@ -27,7 +27,7 @@ public class RegisterAPI {
 
     @PostMapping
     public ResponseEntity<?> registerCustomer(@RequestBody Customer customer) {
-        if (customer.getId() !=0 ||customer.getName() == null|| customer.getEmail() == null) {
+        if (customer.getId() !=0 || customer.getName() == null|| customer.getEmail() == null || customer.getPassword() == null) {
             return ResponseEntity.badRequest().build();
         }
 
