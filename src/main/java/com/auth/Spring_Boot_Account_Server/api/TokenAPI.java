@@ -1,6 +1,7 @@
 package com.auth.Spring_Boot_Account_Server.api;
 
 import com.auth.Spring_Boot_Account_Server.domain.Token;
+import com.auth.Spring_Boot_Account_Server.util.DockerUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -86,7 +87,15 @@ public class TokenAPI {
 
     private Customer getCustomerByNameFromCustomerAPI(String username) {
         try {
-            URL url = new URL("http://localhost:8080/api/customers/byname/" + username);
+            URL url;
+            if(DockerUtils.isDockerRunning()){
+                url = new URL("http://data-server:8080/api/customers/byname/" + username);
+            } else {
+                System.out.println("Docker is not running");
+                url = new URL("http://localhost:8080/api/customers/byname/" + username);
+            }
+
+//            URL url = new URL("http://localhost:8080/api/customers/byname/" + username);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");

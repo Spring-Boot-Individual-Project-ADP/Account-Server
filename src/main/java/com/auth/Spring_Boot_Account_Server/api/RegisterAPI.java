@@ -2,6 +2,7 @@ package com.auth.Spring_Boot_Account_Server.api;
 
 import com.auth.Spring_Boot_Account_Server.domain.Customer;
 import com.auth.Spring_Boot_Account_Server.util.CustomerUtils;
+import com.auth.Spring_Boot_Account_Server.util.DockerUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -43,8 +44,14 @@ public class RegisterAPI {
 
     private void postNewCustomerToCustomerAPI(String json_string) {
         try {
-
-            URL url = new URL("http://localhost:8080/api/customers");
+            URL url;
+            if (DockerUtils.isDockerRunning()){
+                url = new URL("http://data-server:8080/api/customers");
+            } else {
+                System.out.println("Docker is not running");
+                url = new URL("http://localhost:8080/api/customers");
+            }
+//            URL url = new URL("http://localhost:8080/api/customers");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
